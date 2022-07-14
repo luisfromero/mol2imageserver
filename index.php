@@ -30,16 +30,16 @@ if(isset($_GET['num']))$num=$_GET['num'];else$num=4;
 if(!file_exists("mol2/$molecule.mol2")){
 	//$debug=true;
 	$path="https://go.drugbank.com/structures/small_molecule_drugs/{$molecule}.mol";
-	if($debug)echo "downloading $path<br>";
-	$src = file_get_contents($path);
-	//echo $src;
+	if($debug)
+	echo "downloading $path<br>";
+	if(!($src = file_get_contents($path)) ){echo "negativo";exit;}
 	$archivo="mol/{$molecule}.mol";
 	file_put_contents($archivo, $src);
 	$convert="\"C:\\Program Files\\OpenBabel-2.4.1\\obabel\" --title {$molecule} -i mol d:\\datos\\mol2imageserver\\mol\\{$molecule}.mol -o ml2 -O d:\\datos\\mol2imageserver\\mol2\\{$molecule}.mol2";
 	//$convert="\"C:\\Program Files\\OpenBabel-2.4.1\\obabel\" -H";
 	if($debug)echo "<br>$convert<br>";
 	$salida=shell_exec(($convert));
-	echo $salida;
+	//echo $salida;
 	$lineas=preg_split('/\r\n|\r|\n/', $salida);
 	for($i=0;$i<count($lineas)-1;$i++)
 	{
