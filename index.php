@@ -22,7 +22,9 @@ error_reporting(E_ALL);
 $host= gethostname();
 //print_r($_SERVER);
 //echo $_SERVER['LOCAL_ADDR'].$host;
-if(!isset($_GET['mol'])){echo "Use http://molserver.feliperomero.es?mol=DB00114&num=6";exit;}
+
+$link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]";
+if(!isset($_GET['mol'])){echo "Usage: $link?mol=DB00114&num=6   [&debug]";exit;}
 $molecule=$_GET['mol'];
 if(isset($_GET['num']))$num=$_GET['num'];else$num=8;
 //if(isset($_GET['debug']))$debug=true;

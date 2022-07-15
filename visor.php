@@ -51,9 +51,13 @@ if($method == "OPTIONS") {
 	// Los 1969 de la base de datos original ya están
 	// Los del query se generan a la vez que las imágenes aleatorias, así que 
 
-
-	ChemDoodle.io.file.content('http://molserver.feliperomero.es/mol/'+molecula1,callback1 );
-	ChemDoodle.io.file.content('http://molserver.feliperomero.es/mol/'+molecula2,callback2 );
+	<?php
+	$link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]";
+	?>
+	console.log('Descargando <?php echo $link; ?>/mol/'+molecula1);
+	ChemDoodle.io.file.content('<?php echo $link; ?>/mol/'+molecula1,callback1 );
+	console.log('Descargando <?php echo $link; ?>/mol/'+molecula2);
+	ChemDoodle.io.file.content('<?php echo $link; ?>/mol/'+molecula2,callback2 );
 	
 	}
 	/* Ejemplo uso servicio en la nube
