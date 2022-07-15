@@ -41,7 +41,7 @@ if($host=="cactus")
 else
 	{
 	$mol2file="/var/molecules/mol2/$molecule.mol2";
-	$molfile="/var/molecules/mol/{$molecule}.mol";
+	$molfile="/var/www/mol2imageserver/mol/{$molecule}.mol";
 	$codeexec="/opt/mol2image/mol2image $molecule.mol2 $num";
 	$convert="obabel --title {$molecule} -i mol /var/molecules/mol/{$molecule}.mol -o ml2 -O /var/molecules/mol2/{$molecule}.mol2";
 	}
