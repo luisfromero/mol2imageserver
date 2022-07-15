@@ -35,14 +35,14 @@ if($host=="cactus")
 	{
 	$mol2file="mol2/$molecule.mol2";
 	$molfile="mol/{$molecule}.mol";
-	$codeexec="d:/onedrive/proyectos/cudaMol/cmake-build-debug-visual-studio/Debug/mol2image.exe $mol2file $num";
+	$codeexec="d:/onedrive/proyectos/cudaMol/cmake-build-debug-visual-studio/Debug/mol2image.exe $molecule.mol2 $num";
 	$convert="\"C:\\Program Files\\OpenBabel-2.4.1\\obabel\" --title {$molecule} -i mol d:\\datos\\mol2imageserver\\mol\\{$molecule}.mol -o ml2 -O d:\\datos\\mol2imageserver\\mol2\\{$molecule}.mol2";
 	}
 else
 	{
 	$mol2file="/var/molecules/mol2/$molecule.mol2";
 	$molfile="/var/molecules/mol/{$molecule}.mol";
-	$codeexec="/opt/mol2image/mol2image $mol2file $num";
+	$codeexec="/opt/mol2image/mol2image $molecule.mol2 $num";
 	$convert="obabel --title {$molecule} -i mol /var/molecules/mol/{$molecule}.mol -o ml2 -O /var/molecules/mol2/{$molecule}.mol2";
 	}
 
