@@ -82,8 +82,8 @@ $time_end = microtime(true);
 
 for($i=0;$i<count($lineas)-1;$i++)
 {
-	if($debug)echo "<a href=$lineas[$i] target=_blank >$lineas[$i]</a><br>";
-	else echo "$lineas[$i]<br>";
+	if($debug)echo "<a href=mol2images/$lineas[$i] target=_blank >mol2images/$lineas[$i]</a><br>";
+	else echo "mol2images/$lineas[$i]<br>";
 }
 
 if($num==count($lineas)-1)if($debug)echo "<br><b>Command executed succesfully!. </b><br><br>";
