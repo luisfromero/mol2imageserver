@@ -54,10 +54,10 @@ if($method == "OPTIONS") {
 	<?php
 	$link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]";
 	?>
-	console.log('Descargando <?php echo $link; ?>mol/'+molecula1);
-	ChemDoodle.io.file.content('<?php echo $link; ?>mol/'+molecula1,callback1 );
-	console.log('Descargando <?php echo $link; ?>mol/'+molecula2);
-	ChemDoodle.io.file.content('<?php echo $link; ?>mol/'+molecula2,callback2 );
+	console.log('Descargando <?php echo $link; ?>/molserver/mol/'+molecula1);
+	ChemDoodle.io.file.content('<?php echo $link; ?>/molserver/mol/'+molecula1,callback1 );
+	console.log('Descargando <?php echo $link; ?>/molserver/mol/'+molecula2);
+	ChemDoodle.io.file.content('<?php echo $link; ?>/molserver/mol/'+molecula2,callback2 );
 	
 	}
 	/* Ejemplo uso servicio en la nube
