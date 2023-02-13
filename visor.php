@@ -10,11 +10,7 @@ if($method == "OPTIONS") {
 //*****************************************************************************************************************
 //               Generamos la página
 //*****************************************************************************************************************
-
 ?>
-
-
-
 
 <html>
 <head>
@@ -30,7 +26,7 @@ if($method == "OPTIONS") {
 <body>
 
 
-	<script>
+<script>
 //****************************************************************************************
 // Tras definir el tamaño, creamos los canvas, capturamos los eventos
 //****************************************************************************************
@@ -39,9 +35,9 @@ if($method == "OPTIONS") {
 	let canvas2 = new ChemDoodle.TransformCanvas3D('canvas2', wh, wh);
 	cargaInicial(canvas1,nombre1);
 	cargaInicial(canvas2,nombre2);
-	</script>
+</script>
 	
-	<script>
+<script>
 	if(true){
 
 	//callback1=function(fileContent) {estilo(canvas1);carga(canvas1,fileContent,nombre1);}
@@ -49,15 +45,19 @@ if($method == "OPTIONS") {
 	
 	//Estas funciones se deben llamar cuando se sabe que los archivos mol están disponibles
 	// Los 1969 de la base de datos original ya están
-	// Los del query se generan a la vez que las imágenes aleatorias, así que 
+	// Y los del query se generan a la vez que las imágenes aleatorias, así que 
 
 	<?php
-	$link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]";
+	$link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://".$_SERVER['HTTP_HOST'];
+	// Two ways to access the viewer: molserver.feliperomero.es/visor vs molfinder.ual.es/moserver
+	//echo ;
+	$molserver = strpos(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH),"molserver")===false; //second one
+	$urlc=$link.($molserver?"/mol/":"/molserver/mol/");
+	echo "\nconsole.log('Descargando $urlc'+molecula1);";
+	echo "\nChemDoodle.io.file.content('$urlc'+molecula1,callback1 );";
+	echo "\nconsole.log('Descargando $urlc'+molecula2);";
+	echo "\nChemDoodle.io.file.content('$urlc'+molecula2,callback2 );";
 	?>
-	console.log('Descargando <?php echo $link; ?>/molserver/mol/'+molecula1);
-	ChemDoodle.io.file.content('<?php echo $link; ?>/molserver/mol/'+molecula1,callback1 );
-	console.log('Descargando <?php echo $link; ?>/molserver/mol/'+molecula2);
-	ChemDoodle.io.file.content('<?php echo $link; ?>/molserver/mol/'+molecula2,callback2 );
 	
 	}
 	/* Ejemplo uso servicio en la nube
@@ -73,5 +73,4 @@ if($method == "OPTIONS") {
 
 </script>
 <br><input type=checkbox id=cb  onclick='contador=0;' checked>Mover solidariamente
-
 </html>
