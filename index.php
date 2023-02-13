@@ -7,12 +7,12 @@ $method = $_SERVER['REQUEST_METHOD'];
 if($method == "OPTIONS") {
     die();
 }
-$debug=false;
+$seed=$hq=$debug=false;
 //print_r($_GET);
 if(isset($_GET['debug']))$debug=true;
+if(isset($_GET['hq']))$hq=true;
+if(isset($_GET['seed']))$seed=(int)($_GET['seed']);
 if($debug){
-	
-	
 	#!/usr/bin/php
 ini_set("display_errors", 1);
 ini_set("track_errors", 1);
@@ -24,7 +24,7 @@ $host= gethostname();
 //echo $_SERVER['LOCAL_ADDR'].$host;
 
 $link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]";
-if(!isset($_GET['mol'])){echo "Usage: $link?mol=DB00114&num=6   [&debug]";exit;}
+if(!isset($_GET['mol'])){echo "Usage: $link?mol=DB00114&num=6   [&debug] [&seed] [&hq]";exit;}
 $molecule=$_GET['mol'];
 if(isset($_GET['num']))$num=$_GET['num'];else$num=8;
 //if(isset($_GET['debug']))$debug=true;
@@ -32,6 +32,7 @@ if(isset($_GET['num']))$num=$_GET['num'];else$num=8;
 
 //*****************************************************************************************************************
 //               Si no existe el archivo mol2, lo descargamos de la base de datos y lo convertimos con openbabel
+//				 la versión .mol es utilizada por el visor 3D de chemdoodle
 //*****************************************************************************************************************
 if($host=="cactus")
 	{
@@ -42,9 +43,12 @@ if($host=="cactus")
 	}
 else
 	{
+	// Este es el final
+	$hq=$hq?"-Q":"";
+	$seed="-s".($seed?$seed:mt_rand()); //If not set in mol2images, seed=0
 	$mol2file="/var/molecules/mol2/$molecule.mol2";
 	$molfile="/var/www/mol2imageserver/mol/{$molecule}.mol";
-	$codeexec="/opt/mol2image/mol2image $molecule.mol2 $num";
+	$codeexec="/opt/mol2image/mol2image $hq $seed $molecule.mol2 $num";
 	$convert="obabel --title {$molecule} -i mol $molfile -o ml2 -O $mol2file";
 	}
 
@@ -87,6 +91,11 @@ for($i=0;$i<count($lineas)-1;$i++)
 	if($debug)echo "<a href=mol2images/$lineas[$i] target=_blank >mol2images/$lineas[$i]</a><br>";
 	else echo "mol2images/$lineas[$i]<br>";
 }
+if($debug)
+	for($i=0;$i<count($lineas)-1;$i++)
+	{
+		echo "<img src=mol2images/$lineas[$i]><br>";
+	}
 
 if($num==count($lineas)-1)if($debug)echo "<br><b>Command executed succesfully!. </b><br><br>";
 
