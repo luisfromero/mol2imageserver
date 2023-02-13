@@ -1,23 +1,33 @@
 # MolServer
 
-Molserver es un servidor de imágenes que forma parte de la suite de aplicaciones [molfinder](http://molfinder.ual.es). En concreto, es el componente responsable de:
+Molserver is an image server that is part of the [molfinder](http://molfinder.ual.es). application suite. In particular, it is the component responsible for:
 
-* La generación del conjunto de proyecciones aleatorias de una molécula, y que se utilizan para la consulta al motor de Inteligencia Artificial Molnet2D.
-* La visualización de una pareja de moléculas utilizando [ChemDoodle](#licencias) y [Open Babel](#licencias)
+* Generating the set of random projections of a molecule, which are used for the query to the Molnet2D artificial intelligence engine.
 
-## Generacion de imágenes
+* Visualizing a pair of molecules using [ChemDoodle](#licences) and [Open Babel](#licences)
 
-Al componente de generación de las imágenes se accede mediante la página [index.php](/index.php). El resultado es una lista en texto plano de las url relativas al servidor, así como la generación, en una carpeta, de la imágenes proyectadas. A la página se le pasan los siguientes parámetros GET:
+## Image Generation
 
-* mol=molname: Es el nombre de la molécula, utilizando el nombre del archivo de la base de datus [Drugbank](https://go.drugbank.com/) sin extensión, y respetando las mayúsculas. Este parámetro es obligatorio.
-* num=numero: Número de imágenes que se van a generar. En caso de que no se especifique, se utilizará el número indicado en el código (8)
-* debug: parámetro que se utiliza para mostrar información adicional. Además, junto la lista plana de imágenes generadas se muestran las urls de las imágenes, así como una previsualización de las mismas.
-* seed=numero: Semilla utilizada para la generación aleatoria. Si no se especifica, se utilizará una marca temporal.
-* hq: En este caso se generan imágenes en calidad superior (256x256 píxeles)
+The image generation component is accessed through the [index.php](/index.php)page. The result is a plain text list of URLs relative to the server, as well as the generation of the projected images in a folder. The following GET parameters are passed to the page:
 
-## Visualización de las moléculas
+* mol=molname: This is the name of the molecule, using the name of the file from the  [Drugbank](https://go.drugbank.com/) database without an extension, and respecting capitalization. This parameter is mandatory.
+* num=number: The number of images to be generated. If not specified, the number indicated in the code (8) will be used.
+* debug: A parameter that is used to display additional information. In addition, along with the plain list of generated images, the image URLs and a preview of the images are shown.
+* seed=number: Seed used for random generation. If not specified, a time stamp will be used.
+* hq: In this case, high quality images are generated (256x256 pixels)
 
-La página [visor.php](/visor.php) muestra dos ventanas, con una molécula cada una. Las dos moléculas se pasan como parámetros GET, con el nombre de la molécula sin extensión. Para cada una de ellas, el proceso consiste en crear el canvas, cargar una molecula "por defecto", y leer la molécula consultada usando ChemDoodle:
+<img src='img/imgIndex.jpg' width=600>
+
+
+The code generates images in three steps:
+
+1. If the mol2 file or the mol file does not exist, it downloads the mol file from a public database.
+2. If the mol2 file does not exist, it converts the mol file to a mol2 file using shell_exec (php).
+3. It executes the _mol2image_ application, which is part of the [DeepMol repository](https://github.com/luisfromero/DeepMol)
+
+## Visualization of the molecules
+
+The [visor.php](/visor.php) page displays two windows, each with one molecule. The two molecules are passed as GET parameters, with the name of the molecule without an extension. For each one, the process consists of creating the canvas, loading a "default" molecule, and reading the queried molecule using ChemDoodle:
 
 ```js
 var wh=500;
@@ -29,9 +39,11 @@ ChemDoodle.io.file.content('http://molfinder.ual.es/molserver/mol/'+molecula1,ca
 ChemDoodle.io.file.content('http://molfinder.ual.es/molserver/mol/'+molecula2,callback2 );	
 ```
 
-Las funciones cargaInicial, callback1 y callback2 se implementan es el código javascript anexo [visor.js](/js/visor.js). En este código, la parte más interesante se implementa en la función _miondrag_ (my onDrag) que permite girar a la vez las dos moléculas. Para ello es necesario conocer el inverso de las matrices de rotación de las dos moléculas en el momento en el que se activa esta funcionalidad (oldmat1 y oldmat2). A partir de ese momento, si se rota la molécula A, se calcula cómo debe moverse la molécula B mediante un par de operaciones matriciales y se aplica.
+<img src='img/imgVisor.jpg' width=600>
 
-## Licencias
+The functions cargaInicial, callback1 and callback2 are implemented in the attached javascript code [visor.js](js/visor.js). In this code, the most interesting part is implemented in the function miondrag (my onDrag) that allows rotating both molecules at the same time. To do this, it is necessary to know the inverse of the rotation matrices of the two molecules at the time this functionality is activated (oldmat1 and oldmat2). From that moment, if molecule A is rotated, molecule B is calculated how it should move through a pair of operations with the matrices oldmat2 and the current matrix of molecule B.
+
+## Licences
 <a name="chemdoodle"></a>
 This project uses Chemdoodle, a chemical graphics and cheminformatics software.<br/>
 Copyright © 2012 iChemLabs, LLC. All rights reserved.<br/>
