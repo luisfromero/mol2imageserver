@@ -94,7 +94,7 @@ for($i=0;$i<count($lineas)-1;$i++)
 if($debug)
 	for($i=0;$i<count($lineas)-1;$i++)
 	{
-		echo "<img src=mol2images/$lineas[$i]><br>";
+		echo ($i%3==0?"<br>":"&nbsp;&nbsp;")."<img src=mol2images/$lineas[$i]><br>";
 	}
 
 if($num==count($lineas)-1)if($debug)echo "<br><b>Command executed succesfully!. </b><br><br>";
