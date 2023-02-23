@@ -12,17 +12,20 @@ $seed=$hq=$debug=false;
 if(isset($_GET['debug']))$debug=true;
 if(isset($_GET['hq']))$hq=true;
 if(isset($_GET['seed']))$seed=(int)($_GET['seed']);
-if($debug){
-	#!/usr/bin/php
-ini_set("display_errors", 1);
-ini_set("track_errors", 1);
-ini_set("html_errors", 1);
-error_reporting(E_ALL);
-}
-$host= gethostname();
-//print_r($_SERVER);
-//echo $_SERVER['LOCAL_ADDR'].$host;
 
+function showErrors()
+{
+	#!/usr/bin/php
+	ini_set("display_errors", 1);
+	ini_set("track_errors", 1);
+	ini_set("html_errors", 1);
+	error_reporting(E_ALL);
+	
+}
+
+
+if($debug)showErrors();
+$host= gethostname();
 $link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]";
 if(!isset($_GET['mol'])){echo "Usage: $link?mol=DB00114&num=6   [&debug] [&seed] [&hq]";exit;}
 $molecule=$_GET['mol'];
@@ -45,11 +48,11 @@ else
 	{
 	// Este es el final
 	$hq=$hq?"-Q":"";
-	$seed="-s".($seed?$seed:mt_rand()); //If not set in mol2images, seed=0
+	$seed="-s".($seed?$seed:mt_rand()); ///< If not set in mol2images, seed=0
 	$mol2file="/var/molecules/mol2/$molecule.mol2";
 	$molfile="/var/www/mol2imageserver/mol/{$molecule}.mol";
-	$codeexec="/opt/mol2image/mol2image $hq $seed $molecule.mol2 $num";
-	$convert="obabel --title {$molecule} -i mol $molfile -o ml2 -O $mol2file";
+	$codeexec="/opt/mol2image/mol2image $hq $seed $molecule.mol2 $num"; ///< Llamada a exec para generar las imágenes
+	$convert="obabel --title {$molecule} -i mol $molfile -o mol2 -O $mol2file"; ///< Llamada a exec para convertir moléculas que existen en mo, pero no en mol2. Por ejemplo, si se descargan
 	}
 
 
@@ -85,23 +88,30 @@ $time_end = microtime(true);
 //               Mostramos los archivos generados (salida del shell_exec)
 //*****************************************************************************************************************
 
-
-for($i=0;$i<count($lineas)-1;$i++)
+/**
+ * Visualiza las imágenes descargadas, o los enlaces a las mismas
+ * @param $lineas Array con los nombres de los archivos, con ruta relativa
+ */
+function showImages($lineas)
 {
-	if($debug)echo "<a href=mol2images/$lineas[$i] target=_blank >mol2images/$lineas[$i]</a><br>";
-	else echo "mol2images/$lineas[$i]<br>";
-}
-if($debug)
+	global $debug,$num;
 	for($i=0;$i<count($lineas)-1;$i++)
 	{
-		echo ($i%3==0?"<br>":"&nbsp;&nbsp;")."<img src=mol2images/$lineas[$i]><br>";
+		if($debug)echo "<a href=mol2images/$lineas[$i] target=_blank >mol2images/$lineas[$i]</a><br>";
+		else echo "mol2images/$lineas[$i]<br>";
 	}
-
-if($num==count($lineas)-1)if($debug)echo "<br><b>Command executed succesfully!. </b><br><br>";
+	if($debug)
+		for($i=0;$i<count($lineas)-1;$i++)
+		{
+			echo ($i%3==0?"<br>":"&nbsp;&nbsp;")."<img src=mol2images/$lineas[$i]>";
+		}
+	
+	if($num==count($lineas)-1)if($debug)echo "<br><b>Command executed succesfully!. </b><br><br>";
+		
+}
 
 $execution_time = ($time_end - $time_start);
-
+showImages($lineas);
 //execution time of the script
 if($debug)echo '<b>Total Execution Time:</b> '.$execution_time.' secs';
-
 

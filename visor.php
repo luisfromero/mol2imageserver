@@ -1,12 +1,38 @@
 <?php
+/**
+ * @file
+ * @brief Visualiza una pareja de moléculas
+ * @author Felipe Romero, Luis F. Romero
+ * 
+ * Muestra dos canas en los que se visualizan dos moléculas en 3D que 
+ * se pueden rotar solidariamente.
+ * 
+ * El código Javascript es que se encarga de casi todo
+ * 
+ */
+
 //header('Access-Control-Allow-Origin: *');
 //header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method");
 //header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
 header("Allow: GET, POST, OPTIONS, PUT, DELETE");
 $method = $_SERVER['REQUEST_METHOD'];
-if($method == "OPTIONS") {
-    die();
+if($method == "OPTIONS")     die();
+
+function generaScriptPreparaArchivos()
+{
+	global $link,$_SERVER;
+	$link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://".$_SERVER['HTTP_HOST'];
+	// Two ways to access the viewer: molserver.feliperomero.es/visor vs molfinder.ual.es/moserver
+	//echo ;
+	$molserver = strpos(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH),"molserver")===false; ///< El servidor es molfinder.ual.es/moserver
+	$urlc=$link.($molserver?"/mol/":"/molserver/mol/"); ///< Url donde están las moléculas
+	echo "\nconsole.log('Descargando $urlc'+molecula1);";
+	echo "\nChemDoodle.io.file.content('$urlc'+molecula1,callback1 );";
+	echo "\nconsole.log('Descargando $urlc'+molecula2);";
+	echo "\nChemDoodle.io.file.content('$urlc'+molecula2,callback2 );";
+
 }
+
 //*****************************************************************************************************************
 //               Generamos la página
 //*****************************************************************************************************************
@@ -48,15 +74,7 @@ if($method == "OPTIONS") {
 	// Y los del query se generan a la vez que las imágenes aleatorias, así que 
 
 	<?php
-	$link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://".$_SERVER['HTTP_HOST'];
-	// Two ways to access the viewer: molserver.feliperomero.es/visor vs molfinder.ual.es/moserver
-	//echo ;
-	$molserver = strpos(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH),"molserver")===false; //second one
-	$urlc=$link.($molserver?"/mol/":"/molserver/mol/");
-	echo "\nconsole.log('Descargando $urlc'+molecula1);";
-	echo "\nChemDoodle.io.file.content('$urlc'+molecula1,callback1 );";
-	echo "\nconsole.log('Descargando $urlc'+molecula2);";
-	echo "\nChemDoodle.io.file.content('$urlc'+molecula2,callback2 );";
+	generaScriptPreparaArchivos();
 	?>
 	
 	}
@@ -72,5 +90,5 @@ if($method == "OPTIONS") {
 
 
 </script>
-<br><input type=checkbox id=cb  onclick='contador=0;' checked>Mover solidariamente
+<br><h1><input type=checkbox id=cb  onclick='contador=0;' checked>Mover solidariamente</h1>
 </html>
